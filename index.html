@@ -30,15 +30,15 @@
     #game-container {
       position: relative;
       display: grid;
-      grid-template-columns: repeat(20, 20px); /* Ajusté pour une meilleure adaptation sur les petits écrans */
+      grid-template-columns: repeat(20, 30px);
       grid-gap: 3px;
       margin: 20px auto;
-      max-width: 100%; /* Ajusté pour une meilleure adaptation sur les petits écrans */
+      max-width: 660px;
     }
 
     .cell {
-      width: 15px; /* Ajusté pour une meilleure adaptation sur les petits écrans */
-      height: 15px; /* Ajusté pour une meilleure adaptation sur les petits écrans */
+      width: 25px;
+      height: 25px;
       border: 1px solid #555;
       background-color: #333;
       transition: background-color 0.3s;
@@ -106,6 +106,7 @@
       font-size: 24px;
       font-weight: bold;
     }
+
   </style>
   <title>Jeu de la Vie</title>
 </head>
@@ -113,12 +114,12 @@
 <body>
   <div id="header">FOO BIRR ADOUNA</div>
   <div id="tl221">TL221
-    <a href="https://twitter.com/Mahlick26" target="_blank" style="text-decoration: none; color: white;">
-      <img src="x.png" alt="Logo Twitter" style="width: 24px; height: 24px; cursor: pointer;">
-    </a>
-  </div>
+  <a href="https://twitter.com/Mahlick26" target="_blank" style="text-decoration: none; color: white;">
+    <img src="x.png" alt="Logo Twitter" style="width: 24px; height: 24px; cursor: pointer;">
+  </a>
+</div>
   <div id="game-container" class="hidden">
-    <!-- Contenu de la grille -->
+   
   </div>
   <p>Score: <span id="generation">0</span></p>
   <p id="game-over-message" class="hidden">Ndeysan perte nga</p>
@@ -194,7 +195,7 @@
         generation++;
         updateGrid();
         updateUI();
-        setTimeout(playGame, 500);
+        setTimeout(playGame, 500); 
       }
     }
 
@@ -205,10 +206,10 @@
 
       for (let i = 0; i < numRows; i++) {
         for (let j = 0; j < numCols; j++) {
-          const neighbors = countNeighbors(i, j);
+          const mbokk = countmbokk(i, j);
           if (grid[i][j] === 1) {
             // Cellule vivante
-            if (neighbors < 2 || neighbors > 3) {
+            if (mbokk < 2 || mbokk > 3) {
               // meurt de solitude ou de surpopulation
               newGrid[i][j] = 0;
             } else {
@@ -217,24 +218,23 @@
             }
           } else {
             // Cellule morte
-            if (neighbors === 3) {
-              // Devient vivante par reproduction
+            if (mbokk === 3) {
+              // Devient vivant  
               newGrid[i][j] = 1;
             }
           }
         }
       }
 
-      // Mettez à jour la grille actuelle
+      // mettez à jour la grile actuelle
       for (let i = 0; i < numRows; i++) {
         for (let j = 0; j < numCols; j++) {
           grid[i][j] = newGrid[i][j];
         }
       }
     }
-
-    //compter
-    function countNeighbors(row, col) {
+//compter
+    function countmbokk(row, col) {
       let count = 0;
       for (let i = -1; i <= 1; i++) {
         for (let j = -1; j <= 1; j++) {
@@ -246,11 +246,11 @@
           }
         }
       }
-      // Ne pas compter la cellule -
+      // Ne pas compter la celule -
       count -= grid[row][col];
       return count;
     }
-    //recommencer le jeu
+//recommecn le jeu
     function resetGame() {
       generation = 0;
       jeubidokh = false;
@@ -262,7 +262,7 @@
       seconds = 0;
       updateTimer();
     }
-    //fonction pour commencer le temps
+//fonction pour commencer le temps
     function startTimer() {
       tempsbi = setInterval(function () {
         seconds++;
@@ -270,7 +270,7 @@
       }, 1000);
     }
 
-    //fonction pour arrêter le temps
+    //fonction pour arreter le temps
     function stopTimer() {
       clearInterval(tempsbi);
     }
@@ -279,10 +279,10 @@
     function updateTimer() {
       const timerSpan = document.getElementById('timer');
       const minutes = Math.floor(seconds / 60);
-      const remainingSeconds = seconds % 60;
-      timerSpan.textContent = `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+      const second_restantes = seconds % 60;
+      timerSpan.textContent = `${minutes}:${second_restantes < 10 ? '0' : ''}${second_restantes}`;
     }
-    //gere le son
+//gere le son
     function toggleSound() {
       isSoundOn = !isSoundOn;
       updateSoundIcon();
