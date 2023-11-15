@@ -30,15 +30,15 @@
     #game-container {
       position: relative;
       display: grid;
-      grid-template-columns: repeat(20, 30px);
+      grid-template-columns: repeat(20, 20px); /* Ajusté pour une meilleure adaptation sur les petits écrans */
       grid-gap: 3px;
       margin: 20px auto;
-      max-width: 660px;
+      max-width: 100%; /* Ajusté pour une meilleure adaptation sur les petits écrans */
     }
 
     .cell {
-      width: 25px;
-      height: 25px;
+      width: 15px; /* Ajusté pour une meilleure adaptation sur les petits écrans */
+      height: 15px; /* Ajusté pour une meilleure adaptation sur les petits écrans */
       border: 1px solid #555;
       background-color: #333;
       transition: background-color 0.3s;
@@ -106,7 +106,6 @@
       font-size: 24px;
       font-weight: bold;
     }
-
   </style>
   <title>Jeu de la Vie</title>
 </head>
@@ -114,10 +113,10 @@
 <body>
   <div id="header">FOO BIRR ADOUNA</div>
   <div id="tl221">TL221
-  <a href="https://twitter.com/Mahlick26" target="_blank" style="text-decoration: none; color: white;">
-    <img src="x.png" alt="Logo Twitter" style="width: 24px; height: 24px; cursor: pointer;">
-  </a>
-</div>
+    <a href="https://twitter.com/Mahlick26" target="_blank" style="text-decoration: none; color: white;">
+      <img src="x.png" alt="Logo Twitter" style="width: 24px; height: 24px; cursor: pointer;">
+    </a>
+  </div>
   <div id="game-container" class="hidden">
     <!-- Contenu de la grille -->
   </div>
@@ -195,7 +194,7 @@
         generation++;
         updateGrid();
         updateUI();
-        setTimeout(playGame, 500); 
+        setTimeout(playGame, 500);
       }
     }
 
@@ -233,7 +232,8 @@
         }
       }
     }
-//compter
+
+    //compter
     function countNeighbors(row, col) {
       let count = 0;
       for (let i = -1; i <= 1; i++) {
@@ -250,7 +250,7 @@
       count -= grid[row][col];
       return count;
     }
-//recommecn le jeu
+    //recommencer le jeu
     function resetGame() {
       generation = 0;
       jeubidokh = false;
@@ -262,7 +262,7 @@
       seconds = 0;
       updateTimer();
     }
-//fonction pour commencer le temps
+    //fonction pour commencer le temps
     function startTimer() {
       tempsbi = setInterval(function () {
         seconds++;
@@ -270,7 +270,7 @@
       }, 1000);
     }
 
-    //fonction pour arreter le temps
+    //fonction pour arrêter le temps
     function stopTimer() {
       clearInterval(tempsbi);
     }
@@ -282,7 +282,7 @@
       const remainingSeconds = seconds % 60;
       timerSpan.textContent = `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
     }
-//gere le son
+    //gere le son
     function toggleSound() {
       isSoundOn = !isSoundOn;
       updateSoundIcon();
