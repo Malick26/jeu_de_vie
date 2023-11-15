@@ -44,7 +44,7 @@
       transition: background-color 0.3s;
     }
 
-    .cell.alive {
+    .cell.vie {
       background-color: red;
     }
 
@@ -126,7 +126,7 @@
   <div id="footer">
     <button onclick="startStopGame()" class="icon">&#9654; Tambali/SIRPLACE</button>
     <button onclick="resetGame()" class="icon">&#8634; Defatt</button>
-    <span id="sound-icon" class="icon" onclick="toggleSound()">&#128266;</span>
+    <span id="sound-icon" class="icon" onclick="gererSon()">&#128266;</span>
   </div>
 
   <audio id="gameAudio" src="waymaa.mp3"></audio>
@@ -138,7 +138,7 @@
 
   <script>
     const numRows = 20;
-    const numCols = 20;
+    const numCols = 15;
     let jeubidokh = false;
     let generation = 0;
     let grid;
@@ -158,7 +158,7 @@
       for (let i = 0; i < numRows; i++) {
         for (let j = 0; j < numCols; j++) {
           const cell = document.createElement('div');
-          cell.className = `cell ${grid[i][j] ? 'alive' : 'dead'}`;
+          cell.className = `cell ${grid[i][j] ? 'vie' : 'mort'}`;
           cell.addEventListener('click', () => toggleCell(i, j));
           gameContainer.appendChild(cell);
         }
@@ -170,7 +170,7 @@
         gameOverMessage.style.display = 'none';
       }
 
-      updateSoundIcon();
+      majSon();
     }
 
     function toggleCell(row, col) {
@@ -184,9 +184,9 @@
       jeubidokh = !jeubidokh;
       if (jeubidokh) {
         playGame();
-        startTimer();
+        startKhibar();
       } else {
-        stopTimer();
+        stopKhibar();
       }
     }
 
@@ -258,34 +258,34 @@
         Array.from({ length: numCols }, () => Math.random() > 0.7 ? 1 : 0)
       );
       updateUI();
-      stopTimer();
+      stopKhibar();
       seconds = 0;
-      updateTimer();
+      majKhibar();
     }
 //fonction pour commencer le temps
-    function startTimer() {
+    function startKhibar() {
       tempsbi = setInterval(function () {
         seconds++;
-        updateTimer();
+        majKhibar();
       }, 1000);
     }
 
     //fonction pour arreter le temps
-    function stopTimer() {
+    function stopKhibar() {
       clearInterval(tempsbi);
     }
 
     // maj le temps
-    function updateTimer() {
+    function majKhibar() {
       const timerSpan = document.getElementById('timer');
       const minutes = Math.floor(seconds / 60);
       const second_restantes = seconds % 60;
       timerSpan.textContent = `${minutes}:${second_restantes < 10 ? '0' : ''}${second_restantes}`;
     }
 //gere le son
-    function toggleSound() {
+    function gererSon() {
       isSoundOn = !isSoundOn;
-      updateSoundIcon();
+      majSon();
       if (isSoundOn) {
         audio.play();
       } else {
@@ -293,7 +293,7 @@
       }
     }
 
-    function updateSoundIcon() {
+    function majSon() {
       const soundIcon = document.getElementById('sound-icon');
       soundIcon.innerHTML = isSoundOn ? '🔊' : '🔇';
     }
