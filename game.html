@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      margin: 20px;
+      background-color: #282c34;
+      color: white;
+    }
+
+    #header {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    #tl221 {
+      font-size: 36px;
+      font-weight: bold;
+      position: absolute;
+      top: 50%;
+      left: 3cm;
+      transform: translate(0, -50%);
+    }
+
+    #game-container {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(20, 30px);
+      grid-gap: 3px;
+      margin: 20px auto;
+      max-width: 660px;
+    }
+
+    .cell {
+      width: 25px;
+      height: 25px;
+      border: 1px solid #555;
+      background-color: #333;
+      transition: background-color 0.3s;
+    }
+
+    .cell.alive {
+      background-color: red;
+    }
+
+    p {
+      margin: 10px 0;
+      font-size: 18px;
+    }
+
+    button {
+      padding: 10px;
+      font-size: 16px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #game-over-message {
+      color: red;
+      font-weight: bold;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .icon {
+      font-size: 24px;
+      margin-right: 5px;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #footer {
+      margin-top: 20px;
+    }
+
+    #timer-container {
+      position: absolute;
+      top: 50%;
+      right: 3cm;
+      transform: translate(0, -50%);
+      display: flex;
+      align-items: center;
+    }
+
+    #timer-icon {
+      font-size: 24px;
+      margin-right: 5px;
+    }
+
+    #timer {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+  </style>
+  <title>Jeu de la Vie</title>
+</head>
+
+<body>
+  <div id="header">FOO BIRR ADOUNA</div>
+  <div id="tl221">TL221
+  <a href="https://twitter.com/Mahlick26" target="_blank" style="text-decoration: none; color: white;">
+    <img src="x.png" alt="Logo Twitter" style="width: 24px; height: 24px; cursor: pointer;">
+  </a>
+</div>
+  <div id="game-container" class="hidden">
+    <!-- Contenu de la grille -->
+  </div>
+  <p>Score: <span id="generation">0</span></p>
+  <p id="game-over-message" class="hidden">Ndeysan perte nga</p>
+  <div id="footer">
+    <button onclick="startStopGame()" class="icon">&#9654; Tambali/SIRPLACE</button>
+    <button onclick="resetGame()" class="icon">&#8634; Defatt</button>
+    <span id="sound-icon" class="icon" onclick="toggleSound()">&#128266;</span>
+  </div>
+
+  <audio id="gameAudio" src="waymaa.mp3"></audio>
+
+  <div id="timer-container">
+    <span id="timer-icon" class="icon">⏲️</span>
+    <span id="timer">0:00</span>
+  </div>
+
+  <script>
+    const numRows = 20;
+    const numCols = 20;
+    let jeubidokh = false;
+    let generation = 0;
+    let grid;
+    let tempsbi;
+    let seconds = 0;
+    let isSoundOn = true;
+    const audio = document.getElementById('gameAudio');
+
+    function updateUI() {
+      const gameContainer = document.getElementById('game-container');
+      const generationSpan = document.getElementById('generation');
+      const gameOverMessage = document.getElementById('game-over-message');
+
+      gameContainer.innerHTML = '';
+      generationSpan.textContent = generation;
+
+      for (let i = 0; i < numRows; i++) {
+        for (let j = 0; j < numCols; j++) {
+          const cell = document.createElement('div');
+          cell.className = `cell ${grid[i][j] ? 'alive' : 'dead'}`;
+          cell.addEventListener('click', () => toggleCell(i, j));
+          gameContainer.appendChild(cell);
+        }
+      }
+
+      if (!jeubidokh) {
+        gameOverMessage.style.display = 'block';
+      } else {
+        gameOverMessage.style.display = 'none';
+      }
+
+      updateSoundIcon();
+    }
+
+    function toggleCell(row, col) {
+      if (!jeubidokh) {
+        grid[row][col] = 1 - grid[row][col];
+        updateUI();
+      }
+    }
+
+    function startStopGame() {
+      jeubidokh = !jeubidokh;
+      if (jeubidokh) {
+        playGame();
+        startTimer();
+      } else {
+        stopTimer();
+      }
+    }
+
+    function playGame() {
+      if (jeubidokh) {
+        generation++;
+        updateGrid();
+        updateUI();
+        setTimeout(playGame, 500); 
+      }
+    }
+
+    function updateGrid() {
+      const newGrid = Array.from({ length: numRows }, () =>
+        Array.from({ length: numCols }, () => 0)
+      );
+
+      for (let i = 0; i < numRows; i++) {
+        for (let j = 0; j < numCols; j++) {
+          const neighbors = countNeighbors(i, j);
+          if (grid[i][j] === 1) {
+            // Cellule vivante
+            if (neighbors < 2 || neighbors > 3) {
+              // meurt de solitude ou de surpopulation
+              newGrid[i][j] = 0;
+            } else {
+              // Continue de vivre
+              newGrid[i][j] = 1;
+            }
+          } else {
+            // Cellule morte
+            if (neighbors === 3) {
+              // Devient vivante par reproduction
+              newGrid[i][j] = 1;
+            }
+          }
+        }
+      }
+
+      // Mettez à jour la grille actuelle
+      for (let i = 0; i < numRows; i++) {
+        for (let j = 0; j < numCols; j++) {
+          grid[i][j] = newGrid[i][j];
+        }
+      }
+    }
+//compter
+    function countNeighbors(row, col) {
+      let count = 0;
+      for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+          const newRow = row + i;
+          const newCol = col + j;
+
+          if (newRow >= 0 && newRow < numRows && newCol >= 0 && newCol < numCols) {
+            count += grid[newRow][newCol];
+          }
+        }
+      }
+      // Ne pas compter la cellule -
+      count -= grid[row][col];
+      return count;
+    }
+//recommecn le jeu
+    function resetGame() {
+      generation = 0;
+      jeubidokh = false;
+      grid = Array.from({ length: numRows }, () =>
+        Array.from({ length: numCols }, () => Math.random() > 0.7 ? 1 : 0)
+      );
+      updateUI();
+      stopTimer();
+      seconds = 0;
+      updateTimer();
+    }
+//fonction pour commencer le temps
+    function startTimer() {
+      tempsbi = setInterval(function () {
+        seconds++;
+        updateTimer();
+      }, 1000);
+    }
+
+    //fonction pour arreter le temps
+    function stopTimer() {
+      clearInterval(tempsbi);
+    }
+
+    // maj le temps
+    function updateTimer() {
+      const timerSpan = document.getElementById('timer');
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+      timerSpan.textContent = `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+    }
+//gere le son
+    function toggleSound() {
+      isSoundOn = !isSoundOn;
+      updateSoundIcon();
+      if (isSoundOn) {
+        audio.play();
+      } else {
+        audio.pause();
+      }
+    }
+
+    function updateSoundIcon() {
+      const soundIcon = document.getElementById('sound-icon');
+      soundIcon.innerHTML = isSoundOn ? '🔊' : '🔇';
+    }
+
+    // Initialiser , afficher grille 
+    resetGame();
+  </script>
+</body>
+
+</html>
