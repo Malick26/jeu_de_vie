@@ -41,11 +41,11 @@ Cette fonction compte le nombre de voisins vivants autour d'une cellule à la po
 
 Réinitialise le jeu en remettant le compteur de génération à zéro, en arrêtant le jeu et en régénérant une nouvelle grille aléatoire.
 
-### `startTimer()`, `stopTimer()`, `updateTimer()`
+### `startKhibar()`, `stopKhibar()`, `majKhibar()`
 
 Ces fonctions gèrent le minuteur du jeu.
 
-### `toggleSound()`
+### `gererSon()`
 
 Active ou désactive le son du jeu.
 
